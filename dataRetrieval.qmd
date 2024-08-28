@@ -1,0 +1,46 @@
+---
+title: "USGS-Data"
+author: "IMS"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(dataRetrieval)
+library(tidyverse)
+library(purrr)
+library(ggplot2)
+library(janitor)
+```
+
+
+```{r}
+# set parameters for the query
+
+siteNumber <- "11118500"
+parameterCd <- "00060"
+startDate <-  "2023-08-19"
+endDate <-  "2023-08-22"
+
+```
+
+```{r}
+
+discharge <- readNWISdv(siteNumber, parameterCd, startDate, endDate) |> 
+  rename(discharge = X_00060_00003) |> 
+  clean_names()
+  
+```
+
+```{r}
+ggplot(discharge, aes(Date, discharge)) +
+  geom_line()
+```
+
+```{r}
+max_parameterCd <- "00003"
+max_discharge <- readNWISpeak(siteNumber)
+```
+
